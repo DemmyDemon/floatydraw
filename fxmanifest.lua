@@ -5,8 +5,8 @@ client_scripts {
     'cl_floaty.lua',
     'rendertarget.lua',
 
-    -- Disable when not in use!
-    'testing.lua',
+    -- Uncomment to see the examples in action
+    -- 'example.lua',
 }
 
 description 'Convenient little render targets, all floaty and ready to draw on!'
