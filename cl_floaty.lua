@@ -50,10 +50,8 @@ function FloatyDraw(coords, heading, callback)
         
         local RT = RenderTargets[index]
 
-        if not RT.rt or not IsNamedRendertargetRegistered(RT.name) then
-            RegisterNamedRendertarget(RT.name, false)
-            LinkNamedRendertarget(RT.model)
-            RT.rt = GetNamedRendertargetRenderId(RT.name)
+        if not RT.rt then
+            RT.rt = RenderTarget(RT.model, RT.name)
         end
 
         if not RT.entity or not DoesEntityExist(RT.entity) then
@@ -65,14 +63,12 @@ function FloatyDraw(coords, heading, callback)
 
         SetEntityCoordsNoOffset(RT.entity, coords, false, false, false)
         SetEntityHeading(RT.entity, heading)
-        SetTextRenderId(RT.rt)
-        SetScriptGfxDrawOrder(4)
 
-        local success, message = pcall(callback, RT.entity, distance)
-        
-        SetTextRenderId(1)
+        local error = RT.rt(function()
+            callback(RT.entity, distance)
+        end)
 
-        if not success then
+        if error then
             print('FloatyDraw failed callback: ' .. message)
             Citizen.Wait(1000)
             return 'Failed callback: ' .. message
@@ -90,6 +86,9 @@ exports('FloatyDraw', FloatyDraw)
 AddEventHandler('onResourceStop',function(resourceName)
     if resourceName == GetCurrentResourceName() then
         for i, target in pairs(RenderTargets) do
+            if target.rt then
+                target.rt:release()
+            end
             if target.entity and DoesEntityExist(target.entity) then
                 DeleteEntity(target.entity)
             end
