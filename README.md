@@ -52,8 +52,6 @@ All this is not without it's limitations, obviously.
 The biggest problem is performance. Quite a number of natives are called to make this happen, and exports are not free in themselves.  
 Another major limitation is that only 19 of these can be drawn at any given moment. This is because it actually creates a prop to draw on, and there are only 19 clones of this prop available. Then there are minor limitations such as the available space on the rendering target and the fact that it's not visible from the back.
 
-You also need to know the name or hash of the prop you want to draw on, and the render target texture of that prop. Not every prop has one, obviously.
-
 As I see it, this is very much worth it for the fact that it is a real 3D text that you can walk in front of, is not visible through walls etc etc.
 
 Render targets
@@ -70,6 +68,8 @@ client_scripts {
     '@floatydraw/rendertarget.lua',
 }
 ```
+
+You also need to know the name or hash of the prop you want to draw on, and the render target texture of that prop. Not every prop has one, obviously.
 
 Once that is all sorted, you can do something like this:
 ```lua
