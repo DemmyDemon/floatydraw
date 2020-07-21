@@ -22,6 +22,7 @@ local RenderTargets = {
 
 local lastDraw = 0
 local testRadius = 2.0
+local index = 1
 
 function FloatyDraw(coords, heading, callback)
 
@@ -39,10 +40,18 @@ function FloatyDraw(coords, heading, callback)
         return 'Point out of range'
     end
 
+    local diff = (testCoords - camCoord)
+    local diffAngle = math.deg(math.atan(diff.y, diff.x))
+    local compare = diffAngle - heading
+    if compare < 0 and compare > -180 then
+        return 'Not a visible angle'
+    end
+
     local now = GetGameTimer()
-    local index = 1
     if lastDraw == now then
         index = index + 1
+    else
+        index = 1
     end
 
     if RenderTargets[index] then
